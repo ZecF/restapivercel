@@ -1,4 +1,4 @@
-const { ephotoMaker } = require('../lib/ephotomaker');
+const { ephoto360 } = require('../lib/ephotomaker');
 
 module.exports = async function (req, res) {
   res.setHeader('Content-Type', 'application/json');
@@ -17,7 +17,7 @@ module.exports = async function (req, res) {
   }
 
   try {
-    const result = await ephotoMaker(effect, text);
+    const result = await ephoto360(effect, text);
     if (result.status === 'success' || result.status === true) {
       return res.status(200).json(result);
     } else {
