@@ -1,10 +1,11 @@
-const { ephoto360 } = require('../lib/ephotomaker');
+const { Ephoto360 } = require('../lib/ephotomaker');
+const client = new Ephoto360(); // Inisialisasi class Ephoto360
 
 module.exports = async function (req, res) {
   res.setHeader('Content-Type', 'application/json');
 
   if (req.method !== 'GET') {
-    return res.status(405).json({ status: false, message: 'Method tidak diizinkan. Gunakan GET.' });
+    return res.status(405).json({ status: false, message: 'Gunakan method GET.' });
   }
 
   const { effect, text } = req.query;
@@ -12,19 +13,23 @@ module.exports = async function (req, res) {
   if (!effect || !text) {
     return res.status(400).json({ 
       status: false, 
-      message: "Parameter wajib diisi! Contoh: /api/ephoto?effect=pubg-logo&text=Dimas" 
+      message: "Parameter wajib diisi! Contoh: ?effect=https://en.ephoto360.com/pubg-logo-maker-online-free-557.html&text=Dimas" 
     });
   }
 
   try {
-    const result = await ephoto360(effect, text);
-    if (result.status === 'success' || result.status === true) {
-      return res.status(200).json(result);
+    // Memanggil fungsi generate dari script pochi dengan parameter { texts: [text] }
+    const result = await client.generate(effect, { texts: [text] });
+    
+    if (result.success) {
+      return res.status(200).json({
+        status: true,
+        imageUrl: result.image_url
+      });
     } else {
-      return res.status(500).json({ status: false, message: result.message || 'Gagal memproses gambar.' });
+      return res.status(500).json({ status: false, message: result.info });
     }
   } catch (error) {
     return res.status(500).json({ status: false, message: error.message });
   }
 };
-    
