@@ -8,17 +8,23 @@ module.exports = async function (req, res) {
     return res.status(405).json({ status: false, message: 'Method tidak diizinkan. Gunakan GET.' });
   }
 
-  const { effect, text } = req.query;
+  // 1. Tambahkan penangkap parameter text2
+  const { effect, text, text2 } = req.query;
 
   if (!effect || !text) {
     return res.status(400).json({ 
       status: false, 
-      message: "Parameter wajib diisi! Contoh: /api/textpro?effect=neon&text=Dimas" 
+      message: "Parameter wajib diisi! Contoh: /api/textpro?effect=pornhub&text=Halo&text2=Dimas" 
     });
   }
 
   try {
-    const result = await textMaker(effect, text);
+    // 2. Jika ada text2, gabungkan menjadi array. Jika tidak ada, tetap jadi array berisi 1 teks.
+    const inputTexts = text2 ? [text, text2] : [text];
+
+    // 3. Kirimkan inputTexts (yang sudah berbentuk array) ke textMaker
+    const result = await textMaker(effect, inputTexts);
+    
     if (result.status === 'success' || result.status === true) {
       return res.status(200).json(result);
     } else {
@@ -28,4 +34,5 @@ module.exports = async function (req, res) {
     return res.status(500).json({ status: false, message: error.message });
   }
 };
+
       
