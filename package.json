@@ -1,0 +1,14 @@
+{
+  "name": "vercel-rest-api",
+  "version": "1.0.0",
+  "description": "REST API for TextPro and Ephoto360",
+  "main": "api/textpro.js",
+  "scripts": {
+    "start": "node api/textpro.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "https-proxy-agent": "^7.0.0"
+  }
+}
